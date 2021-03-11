@@ -1,5 +1,3 @@
-
-
 import 'package:date_picker_timeline/date_widget.dart';
 import 'package:date_picker_timeline/extra/color.dart';
 import 'package:date_picker_timeline/extra/style.dart';
@@ -40,7 +38,7 @@ class DatePicker extends StatefulWidget {
   final TextStyle dateTextStyle;
 
   /// Current Selected Date
-  final DateTime?/*?*/ initialSelectedDate;
+  final DateTime? /*?*/ initialSelectedDate;
 
   /// Contains the list of inactive dates.
   /// All the dates defined in this List will be deactivated
@@ -112,9 +110,9 @@ class _DatePickerState extends State<DatePicker> {
     }
 
     this.selectedDateStyle =
-      widget.dateTextStyle.copyWith(color: widget.selectedTextColor);
+        widget.dateTextStyle.copyWith(color: widget.selectedTextColor);
     this.selectedMonthStyle =
-      widget.monthTextStyle.copyWith(color: widget.selectedTextColor);
+        widget.monthTextStyle.copyWith(color: widget.selectedTextColor);
     this.selectedDayStyle =
         widget.dayTextStyle.copyWith(color: widget.selectedTextColor);
 
@@ -222,10 +220,16 @@ class _DatePickerState extends State<DatePicker> {
 }
 
 class DatePickerController {
+  Size? _screenSize;
+
   _DatePickerState? _datePickerState;
 
   void setDatePickerState(_DatePickerState state) {
     _datePickerState = state;
+  }
+
+  void setScreenSize(Size screenSize) {
+    _screenSize = screenSize;
   }
 
   void jumpToSelection() {
@@ -269,7 +273,17 @@ class DatePickerController {
         _datePickerState!.widget.startDate.month,
         _datePickerState!.widget.startDate.day);
 
+    double itemWidth = _datePickerState!.widget.width;
     int offset = date.difference(startDate).inDays;
-    return (offset * _datePickerState!.widget.width) + (offset * 6);
+
+    const int spaceBetween = 6;
+
+    double result = offset * (itemWidth + spaceBetween);
+
+    if (_screenSize != null) {
+      result -= (_screenSize!.width - itemWidth) / 2;
+    }
+
+    return result;
   }
 }
